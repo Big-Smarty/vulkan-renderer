@@ -4,6 +4,7 @@
 
 #include <glm/vec3.hpp>
 
+#include <memory>
 #include <optional>
 
 // Forward declaration
@@ -23,6 +24,14 @@ namespace inexor::vulkan_renderer::world {
 /// @return ``True`` if the ray collides with the octree cube's bounding box
 [[nodiscard]] bool ray_box_collision(std::array<glm::vec3, 2> &box_bounds, glm::vec3 &pos, glm::vec3 &dir);
 
+/// @brief Check for collision between a vertex and a cube.
+/// @param cube The cube to check for
+/// @param pos The start position of the ray
+/// @param dir The direction vector of the ray
+/// @return The vector of the intersection point, `std::nullopt` otherwise
+[[nodiscard]] std::optional<glm::vec3> ray_cube_vertex_intersection(std::shared_ptr<Cube> cube, glm::vec3 pos,
+                                                                    glm::vec3 dir);
+
 /// @brief Check for a collision between a camera ray and octree geometry.
 /// @param cube The cube to check collisions with
 /// @param pos The camera position
@@ -33,7 +42,7 @@ namespace inexor::vulkan_renderer::world {
 /// @note This does not account yet for octree indentation
 /// @return A std::optional which contains the collision data (if any collision was found)
 [[nodiscard]] std::optional<RayCubeCollision<Cube>>
-ray_cube_collision_check(const Cube &cube, glm::vec3 pos, glm::vec3 dir,
+ray_cube_collision_check(std::shared_ptr<Cube> cube, glm::vec3 pos, glm::vec3 dir,
                          std::optional<std::uint32_t> grid_level_counter = std::nullopt);
 
 } // namespace inexor::vulkan_renderer::world

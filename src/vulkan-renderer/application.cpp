@@ -575,17 +575,18 @@ void Application::process_mouse_input() {
 void Application::check_octree_collisions() {
     // Check for collision between camera ray and every octree
     for (const auto &world : m_worlds) {
-        const auto collision = ray_cube_collision_check(*world, m_camera->position(), m_camera->front());
+        const auto collision = ray_cube_collision_check(world, m_camera->position(), m_camera->front());
 
         if (collision) {
-            const auto intersection = collision.value().intersection();
-            const auto face_normal = collision.value().face();
-            const auto corner = collision.value().corner();
-            const auto edge = collision.value().edge();
+            const auto cube_hit = collision.value().cube_intersection();
+            const auto face_normal = collision.value().cube_face();
+            const auto corner = collision.value().nearest_cube_corner();
+            const auto edge = collision.value().nearest_cube_edge();
+            const auto vertex_hit = collision.value().vertex_intersection();
 
-            spdlog::trace("pos {} {} {} | face {} {} {} | corner {} {} {} | edge {} {} {}", intersection.x,
-                          intersection.y, intersection.z, face_normal.x, face_normal.y, face_normal.z, corner.x,
-                          corner.y, corner.z, edge.x, edge.y, edge.z);
+            spdlog::trace("pos {} {} {} | face {} {} {} | corner {} {} {} | edge {} {} {} | vertex {} {} {}",
+                          cube_hit.x, cube_hit.y, cube_hit.z, face_normal.x, face_normal.y, face_normal.z, corner.x,
+                          corner.y, corner.z, edge.x, edge.y, edge.z, vertex_hit.x, vertex_hit.y, vertex_hit.z);
 
             // Break after one collision.
             break;

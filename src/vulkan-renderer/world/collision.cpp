@@ -13,21 +13,15 @@
 namespace inexor::vulkan_renderer::world {
 
 template <typename T>
-RayCubeCollision<T>::RayCubeCollision(RayCubeCollision &&other) noexcept : m_cube{other.m_cube} {
-    m_intersection = other.m_intersection;
-    m_selected_face = other.m_selected_face;
-    m_nearest_corner = other.m_nearest_corner;
-    m_nearest_edge = other.m_nearest_edge;
-}
-
-template <typename T>
-RayCubeCollision<T>::RayCubeCollision(const T &cube, const glm::vec3 ray_pos, const glm::vec3 ray_dir) : m_cube(cube) {
+RayCubeCollision<T>::RayCubeCollision(std::shared_ptr<T> cube, const glm::vec3 ray_pos, const glm::vec3 ray_dir,
+                                      std::optional<glm::vec3> vertex_intersection)
+    : m_cube(cube), m_vertex_intersection(vertex_intersection) {
 
     /// In order to work with cubes of arbitrary size, this lambda calculates the center of a cube's face with respect
     /// to the size of the octree.
     const auto adjust_coordinates = [=](const glm::vec3 pos) {
         // TODO: Take rotation of the cube into account.
-        return m_cube.center() + pos * (m_cube.size() / 2);
+        return m_cube->center() + pos * (m_cube->size() / 2);
     };
 
     /// x: left/right, y: front/back, z: top/bottom
@@ -138,13 +132,13 @@ RayCubeCollision<T>::RayCubeCollision(const T &cube, const glm::vec3 ray_pos, co
             const auto intersection =
                 ray_plane_intersection_point(bbox_face_centers[i], BBOX_DIRECTIONS[i], ray_pos, ray_dir);
 
-            squared_distance = square_of_distance({m_cube.center(), intersection});
+            squared_distance = square_of_distance({m_cube->center(), intersection});
 
             if (squared_distance < shortest_squared_distance) {
                 selected_face_index = i;
                 shortest_squared_distance = squared_distance;
-                m_intersection = intersection;
-                m_selected_face = bbox_face_centers[i];
+                m_cube_intersection = intersection;
+                m_cube_face = bbox_face_centers[i];
             }
         }
     }
@@ -154,11 +148,11 @@ RayCubeCollision<T>::RayCubeCollision(const T &cube, const glm::vec3 ray_pos, co
 
     // Loop through all corners of this face and check for the nearest one.
     for (const auto corner_index : BBOX_CORNERS_ON_FACE_INDICES[selected_face_index]) {
-        squared_distance = square_of_distance({bbox_corners[corner_index], m_intersection});
+        squared_distance = square_of_distance({bbox_corners[corner_index], m_cube_intersection});
 
         if (squared_distance < shortest_squared_distance) {
             shortest_squared_distance = squared_distance;
-            m_nearest_corner = bbox_corners[corner_index];
+            m_nearest_cube_corner = bbox_corners[corner_index];
         }
     }
 
@@ -168,16 +162,17 @@ RayCubeCollision<T>::RayCubeCollision(const T &cube, const glm::vec3 ray_pos, co
     // Iterate through all edges on this face and select the nearest one.
     for (const auto edge_index : BBOX_EDGE_ON_FACE_INDICES[selected_face_index]) {
 
-        squared_distance = square_of_distance({bbox_edges[edge_index], m_intersection});
+        squared_distance = square_of_distance({bbox_edges[edge_index], m_cube_intersection});
 
         if (squared_distance < shortest_squared_distance) {
             shortest_squared_distance = squared_distance;
-            m_nearest_edge = bbox_edges[edge_index];
+            m_nearest_cube_edge = bbox_edges[edge_index];
         }
     }
 }
 
 // Explicit instantiation
-template RayCubeCollision<Cube>::RayCubeCollision(const Cube &, const glm::vec3, const glm::vec3);
+template RayCubeCollision<Cube>::RayCubeCollision(std::shared_ptr<Cube>, const glm::vec3, const glm::vec3,
+                                                  std::optional<glm::vec3>);
 
 } // namespace inexor::vulkan_renderer::world

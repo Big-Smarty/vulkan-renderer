@@ -573,9 +573,36 @@ void Application::process_mouse_input() {
 }
 
 void Application::check_octree_collisions() {
-    // Check for collision between camera ray and every octree
+    // TODO: Apply one big global octree for bounding volume hierarchy.
+    // TODO: Implement a world manager which resolves multiple octree collision.
+
+    // TODO: Question for code review on GitHub: Can we make this a member?
+    m_world_collision_candidates.clear();
+    m_world_collision_candidates.reserve(m_worlds.size());
+
     for (const auto &world : m_worlds) {
-        const auto collision = ray_cube_collision_check(world, m_camera->position(), m_camera->front());
+        if (!ray_cube_vertex_intersection(world, m_camera->position(), m_camera->front())) {
+            continue;
+        }
+
+        // TODO: Implement min/max collision distance if required.
+
+        m_world_collision_candidates.emplace_back(
+            std::make_pair(world, glm::distance2(world->center(), m_camera->position())));
+    }
+
+    // TODO: Start sorting only after a certain number of worlds.
+
+    // Sort the octree collision candidates by increasing square of distance between cube center and camera.
+    std::sort(m_world_collision_candidates.begin(), m_world_collision_candidates.end(),
+              [](const auto &lhs, const auto &rhs) { return lhs.second < rhs.second; });
+
+    // Check for collision between camera ray and every octree whose bounding box and bounding sphere is hit in order
+    // of increasing squared distance between camera and octree's center.
+    for (const auto &collision_candidate : m_world_collision_candidates) {
+
+        const auto collision =
+            ray_cube_collision_check(collision_candidate.first, m_camera->position(), m_camera->front());
 
         if (collision) {
             const auto cube_hit = collision.value().cube_intersection();
@@ -587,9 +614,6 @@ void Application::check_octree_collisions() {
             spdlog::trace("pos {} {} {} | face {} {} {} | corner {} {} {} | edge {} {} {} | vertex {} {} {}",
                           cube_hit.x, cube_hit.y, cube_hit.z, face_normal.x, face_normal.y, face_normal.z, corner.x,
                           corner.y, corner.z, edge.x, edge.y, edge.z, vertex_hit.x, vertex_hit.y, vertex_hit.z);
-
-            // Break after one collision.
-            break;
         }
     }
 }

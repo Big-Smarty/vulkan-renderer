@@ -31,6 +31,8 @@ class Application : public VulkanRenderer {
     bool m_enable_validation_layers{true};
     /// Inexor engine supports a variable number of octrees.
     std::vector<std::shared_ptr<world::Cube>> m_worlds;
+    /// If multiple octrees exist, we check for collisions with increasing distance between camera and octree with this.
+    std::vector<std::pair<std::shared_ptr<world::Cube>, float>> m_world_collision_candidates;
 
     // If the user specified command line argument "--stop-on-validation-message", the program will call
     // std::abort(); after reporting a validation layer (error) message.

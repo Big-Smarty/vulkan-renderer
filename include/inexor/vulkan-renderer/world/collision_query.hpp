@@ -32,6 +32,12 @@ namespace inexor::vulkan_renderer::world {
 [[nodiscard]] std::optional<glm::vec3> ray_cube_vertex_intersection(std::shared_ptr<Cube> cube, glm::vec3 pos,
                                                                     glm::vec3 dir);
 
+/// @brief Check if bounding sphere and bounding box of a cube are hit.
+/// @param cube The cube
+/// @param pos The start position of the ray
+/// @param dir The direction vector of the ray
+[[nodiscard]] bool is_bounding_box_and_bounding_sphere_hit(std::shared_ptr<Cube> cube, glm::vec3 pos, glm::vec3 dir);
+
 /// @brief Check for a collision between a camera ray and octree geometry.
 /// @param cube The cube to check collisions with
 /// @param pos The camera position

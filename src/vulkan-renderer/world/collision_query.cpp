@@ -37,7 +37,7 @@ bool ray_box_collision(const std::array<glm::vec3, 2> &box_bounds, const glm::ve
     return !((tmin > tzmax) || (tzmin > tmax));
 }
 
-std::optional<glm::vec3> ray_cube_vertex_intersection(std::shared_ptr<Cube> cube, const glm::vec3 pos,
+std::optional<glm::vec3> ray_cube_vertex_intersection(const std::shared_ptr<Cube> cube, const glm::vec3 pos,
                                                       const glm::vec3 dir) {
     const auto cube_polygons = cube->polygons();
 
@@ -78,35 +78,31 @@ std::optional<glm::vec3> ray_cube_vertex_intersection(std::shared_ptr<Cube> cube
     return vertex_intersection;
 }
 
-std::optional<RayCubeCollision<Cube>> ray_cube_collision_check(std::shared_ptr<Cube> cube, const glm::vec3 pos,
+[[nodiscard]] bool is_bounding_box_and_bounding_sphere_hit(const std::shared_ptr<Cube> cube, const glm::vec3 pos,
+                                                           const glm::vec3 dir) {
+    // We need to pass this into glm::intersectRaySphere by reference although we are not interested in it.
+    auto intersection_distance{0.0f};
+    const auto bounding_sphere_radius = static_cast<float>(glm::sqrt(3) * cube->size()) / 2.0f;
+    const auto bounding_sphere_radius_squared = static_cast<float>(std::pow(bounding_sphere_radius, 2));
+
+    // First, check if the ray collides with the cube's bounding sphere.
+    // Ray-sphere collision is much easier to calculate than ray-box collision.
+    if (!glm::intersectRaySphere(pos, dir, cube->center(), bounding_sphere_radius_squared, intersection_distance)) {
+        return false;
+    }
+
+    // Second, check if ray collides with bounding box.
+    // TODO: This is an axis aligned bounding box! Alignment must account for rotation of the octree in the future!
+    if (!ray_box_collision(cube->bounding_box(), pos, dir)) {
+        return false;
+    }
+
+    return true;
+}
+
+std::optional<RayCubeCollision<Cube>> ray_cube_collision_check(const std::shared_ptr<Cube> cube, const glm::vec3 pos,
                                                                const glm::vec3 dir,
                                                                const std::optional<std::uint32_t> grid_level_counter) {
-
-    /// @brief Check if bounding sphere and bounding box of a cube are hit.
-    /// @param cube The cube
-    /// @param pos The start position of the ray
-    /// @param dir The direction vector of the ray
-    auto is_bounding_box_and_bounding_sphere_hit = [&](std::shared_ptr<Cube> cube, const glm::vec3 pos,
-                                                       const glm::vec3 dir) {
-        // We need to pass this into glm::intersectRaySphere by reference although we are not interested in it.
-        auto intersection_distance{0.0f};
-        const auto bounding_sphere_radius = static_cast<float>(glm::sqrt(3) * cube->size()) / 2.0f;
-        const auto bounding_sphere_radius_squared = static_cast<float>(std::pow(bounding_sphere_radius, 2));
-
-        // First, check if the ray collides with the cube's bounding sphere.
-        // Ray-sphere collision is much easier to calculate than ray-box collision.
-        if (!glm::intersectRaySphere(pos, dir, cube->center(), bounding_sphere_radius_squared, intersection_distance)) {
-            return false;
-        }
-
-        // Second, check if ray collides with bounding box.
-        // TODO: This is an axis aligned bounding box! Alignment must account for rotation of the octree in the future!
-        if (!ray_box_collision(cube->bounding_box(), pos, dir)) {
-            return false;
-        }
-
-        return true;
-    };
 
     if (cube->type() == Cube::Type::EMPTY || !is_bounding_box_and_bounding_sphere_hit(cube, pos, dir)) {
         return std::nullopt;

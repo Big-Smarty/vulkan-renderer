@@ -36,8 +36,7 @@ public:
     }
 
     [[nodiscard]] auto vertex_intersection() const noexcept {
-        assert(m_vertex_intersection);
-        return m_vertex_intersection.value();
+        return m_vertex_intersection;
     }
 
     [[nodiscard]] const glm::vec3 &cube_intersection() const noexcept {

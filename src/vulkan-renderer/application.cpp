@@ -576,7 +576,8 @@ void Application::check_octree_collisions() {
     // TODO: Apply one big global octree for bounding volume hierarchy.
     // TODO: Implement a world manager which resolves multiple octree collision.
 
-    const auto collision = m_collision_solver->find_ray_octree_collision(m_worlds, m_camera->position(), m_camera->front());
+    const auto collision =
+        m_collision_solver->find_ray_octree_collision(m_worlds, m_camera->position(), m_camera->front());
 
     if (collision) {
         const auto cube_hit = collision.value().cube_intersection();
@@ -585,9 +586,16 @@ void Application::check_octree_collisions() {
         const auto edge = collision.value().nearest_cube_edge();
         const auto vertex_hit = collision.value().vertex_intersection();
 
-        spdlog::trace("pos {} {} {} | face {} {} {} | corner {} {} {} | edge {} {} {} | vertex {} {} {}",
-                      cube_hit.x, cube_hit.y, cube_hit.z, face_normal.x, face_normal.y, face_normal.z, corner.x,
-                      corner.y, corner.z, edge.x, edge.y, edge.z, vertex_hit.x, vertex_hit.y, vertex_hit.z);
+        if (vertex_hit) {
+            spdlog::trace("pos {} {} {} | face {} {} {} | corner {} {} {} | edge {} {} {} | vertex {} {} {}",
+                          cube_hit.x, cube_hit.y, cube_hit.z, face_normal.x, face_normal.y, face_normal.z, corner.x,
+                          corner.y, corner.z, edge.x, edge.y, edge.z, vertex_hit.value().x, vertex_hit.value().y,
+                          vertex_hit.value().z);
+        } else {
+            spdlog::trace("pos {} {} {} | face {} {} {} | corner {} {} {} | edge {} {} {}", cube_hit.x, cube_hit.y,
+                          cube_hit.z, face_normal.x, face_normal.y, face_normal.z, corner.x, corner.y, corner.z, edge.x,
+                          edge.y, edge.z);
+        }
     }
 }
 

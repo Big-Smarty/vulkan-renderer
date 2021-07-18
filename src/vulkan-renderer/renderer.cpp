@@ -53,6 +53,9 @@ void VulkanRenderer::setup_render_graph() {
 void VulkanRenderer::generate_octree_indices() {
     auto old_vertices = std::move(m_octree_vertices);
     m_octree_indices.clear();
+    // The memory of the vector is in a valid but unspecified state after std::move was applied to it. According to
+    // C++0x standard, we are allowed to perform any operation on it that does not require preconditions. We bring it
+    // back into a defined state by clearing it.
     m_octree_vertices.clear();
     std::unordered_map<OctreeGpuVertex, std::uint32_t> vertex_map;
     for (auto &vertex : old_vertices) {

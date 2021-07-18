@@ -21,7 +21,7 @@ public:
 
     /// @brief Default constructor.
     /// @param octree_count The number of octrees
-    OctreeCollisionSolver(std::size_t octree_count);
+    explicit OctreeCollisionSolver(std::size_t octree_count);
 
     /// @brief Find a collision between a ray and an octree which is closest to the camera.
     /// @param worlds The octrees to check for collision

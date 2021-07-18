@@ -52,9 +52,8 @@ std::optional<glm::vec3> ray_cube_vertex_intersection(const std::shared_ptr<Cube
     glm::vec3 vertex_intersection{max_float, max_float, max_float};
 
     float m_nearest_square_distance = std::numeric_limits<float>::max();
-    bool any_collision_found = false;
 
-    for (const auto polygon : cube_polygons) {
+    for (const auto &polygon : cube_polygons) {
         for (const auto &triangle : *polygon) {
 
             glm::vec3 collision_output;
@@ -63,7 +62,6 @@ std::optional<glm::vec3> ray_cube_vertex_intersection(const std::shared_ptr<Cube
                 glm::intersectLineTriangle(pos, dir, triangle[0], triangle[1], triangle[2], collision_output);
 
             if (collision_found) {
-                any_collision_found = true;
                 const auto squared_distance = glm::distance2(collision_output, pos);
 
                 // Always store the collision which is closest to the camera.
@@ -146,7 +144,7 @@ std::optional<RayCubeCollision<Cube>> ray_cube_collision_check(const std::shared
 
         collision_candidates.reserve(8);
 
-        for (const auto subcube : subcubes) {
+        for (const auto &subcube : subcubes) {
             if (!is_bounding_box_and_bounding_sphere_hit(subcube, pos, dir)) {
                 continue;
             }
@@ -161,8 +159,10 @@ std::optional<RayCubeCollision<Cube>> ray_cube_collision_check(const std::shared
         std::sort(collision_candidates.begin(), collision_candidates.end(),
                   [](const auto &lhs, const auto &rhs) { return lhs.second < rhs.second; });
 
-        for (const auto possible_collision : collision_candidates) {
-            const auto collision_query = std::make_optional<RayCubeCollision<Cube>>(
+        for (const auto &possible_collision : collision_candidates) {
+
+            // Do not make this const auto as we want to return it. This could prevent automatic move semantics.
+            auto collision_query = std::make_optional<RayCubeCollision<Cube>>(
                 possible_collision.first, pos, dir, ray_cube_vertex_intersection(possible_collision.first, pos, dir));
 
             if (collision_query) {

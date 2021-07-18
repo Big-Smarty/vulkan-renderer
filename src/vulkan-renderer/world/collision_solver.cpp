@@ -36,7 +36,8 @@ OctreeCollisionSolver::find_ray_octree_collision(std::vector<std::shared_ptr<wor
     // of increasing squared distance between camera and octree's center.
     for (const auto &collision_candidate : m_collision_candidates) {
 
-        const auto collision = ray_cube_collision_check(collision_candidate.first, position, direction);
+        // Do not make this const auto as we want to return it. This could prevent automatic move semantics.
+        auto collision = ray_cube_collision_check(collision_candidate.first, position, direction);
 
         if (collision) {
             return collision;

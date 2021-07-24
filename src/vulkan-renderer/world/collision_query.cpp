@@ -149,8 +149,6 @@ std::optional<RayCubeCollision<Cube>> ray_cube_collision_check(const std::shared
                 continue;
             }
 
-            // TODO: Implement min/max collision distance if required.
-
             collision_candidates.emplace_back(
                 std::make_pair(subcube, glm::distance2(subcube->center(), cube->center())));
         }

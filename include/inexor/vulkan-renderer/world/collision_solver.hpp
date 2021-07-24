@@ -30,12 +30,10 @@ private:
                                    glm::vec3 direction, bool find_only_one_collision = true);
 
 public:
-    /// @brief Default constructor.
-    /// @param octree_count The number of octrees
-    explicit OctreeCollisionSolver(std::size_t octree_count);
 
     // TODO: Implement min/max collision distance if required.
-    // TODO: Start sorting only after a certain number of worlds.
+    // TODO: Start sorting octrees by distance to camera only after a certain number of worlds.
+    // TODO: Implement a bounding volume hierarchy (BVH) tree, for example an octree for all the octrees.
 
     /// @brief Find a collision between a ray and an octree which is closest to the camera.
     /// @param worlds The octrees to check for collision

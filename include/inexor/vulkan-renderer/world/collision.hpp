@@ -31,7 +31,7 @@ public:
     /// @brief Default constructor
     /// @param The cube to check collisions with
     /// @note We need to pass cube as a std::shared_ptr by copy in this case because we want to ensure the lifetime
-    /// of the object in multithreaded code. We are not accepting const references here, as they could become invalid.
+    /// of the object in parallelized code. We are not accepting const references here, as they could become invalid.
     /// @param ray The start point of the ray
     /// @param dir The direction of the ray
     /// @param The intersection between ray and vertex geometry of the cube which was found

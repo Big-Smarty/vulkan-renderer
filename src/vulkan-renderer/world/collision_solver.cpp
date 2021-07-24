@@ -9,11 +9,6 @@
 
 namespace inexor::vulkan_renderer::world {
 
-OctreeCollisionSolver::OctreeCollisionSolver(const std::size_t octree_count) {
-    assert(octree_count > 0);
-    m_collision_candidates.reserve(octree_count);
-}
-
 std::vector<RayCubeCollision<Cube>>
 OctreeCollisionSolver::find_all_ray_octree_collisions(const std::vector<std::shared_ptr<world::Cube>> &worlds,
                                                       const glm::vec3 position, const glm::vec3 direction,
@@ -29,6 +24,10 @@ OctreeCollisionSolver::find_all_ray_octree_collisions(const std::vector<std::sha
     // We need a critical section because we are modifying m_collision_candidates.
     std::scoped_lock lock(m_collision_solver_mutex);
     {
+        // TODO: Optimize this! Avoid memory re-allocation if possible and benchmark it.
+        m_collision_candidates.clear();
+        m_collision_candidates.reserve(worlds.size());
+
         for (const auto &world : worlds) {
             if (!is_bounding_box_and_bounding_sphere_hit(world, position, direction)) {
                 continue;

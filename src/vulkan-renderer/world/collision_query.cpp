@@ -37,8 +37,8 @@ bool ray_box_collision(const std::array<glm::vec3, 2> &box_bounds, const glm::ve
     return !((tmin > tzmax) || (tzmin > tmax));
 }
 
-std::optional<glm::vec3> ray_cube_vertex_intersection(const std::shared_ptr<Cube> cube, const glm::vec3 pos,
-                                                      const glm::vec3 dir) {
+std::optional<glm::vec3> ray_cube_vertex_intersection(const std::shared_ptr<Cube> cube, // NOLINT
+                                                      const glm::vec3 pos, const glm::vec3 dir) {
     const auto cube_polygons = cube->polygons();
 
     // If the cube does not contain any vertex data, no collision with vertex data can take place inside of it.
@@ -76,8 +76,8 @@ std::optional<glm::vec3> ray_cube_vertex_intersection(const std::shared_ptr<Cube
     return vertex_intersection;
 }
 
-[[nodiscard]] bool is_bounding_box_and_bounding_sphere_hit(const std::shared_ptr<Cube> cube, const glm::vec3 pos,
-                                                           const glm::vec3 dir) {
+[[nodiscard]] bool is_bounding_box_and_bounding_sphere_hit(const std::shared_ptr<Cube> cube, // NOLINT
+                                                           const glm::vec3 pos, const glm::vec3 dir) {
     // We need to pass this into glm::intersectRaySphere by reference although we are not interested in it.
     auto intersection_distance{0.0f};
     const auto bounding_sphere_radius = static_cast<float>(glm::sqrt(3) * cube->size()) / 2.0f;
@@ -98,8 +98,8 @@ std::optional<glm::vec3> ray_cube_vertex_intersection(const std::shared_ptr<Cube
     return true;
 }
 
-std::optional<RayCubeCollision<Cube>> ray_cube_collision_check(const std::shared_ptr<Cube> cube, const glm::vec3 pos,
-                                                               const glm::vec3 dir,
+std::optional<RayCubeCollision<Cube>> ray_cube_collision_check(const std::shared_ptr<Cube> cube, // NOLINT
+                                                               const glm::vec3 pos, const glm::vec3 dir,
                                                                const std::optional<std::uint32_t> grid_level_counter) {
 
     if (cube->type() == Cube::Type::EMPTY || !is_bounding_box_and_bounding_sphere_hit(cube, pos, dir)) {

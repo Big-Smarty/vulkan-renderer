@@ -28,9 +28,15 @@ class RayCubeCollision {
     glm::vec3 m_nearest_cube_edge;
 
 public:
+    /// @brief Default constructor
+    /// @param The cube to check collisions with
+    /// @param ray The start point of the ray
+    /// @param dir The direction of the ray
+    /// @param The intersection between ray and vertex geometry of the cube which was found
     RayCubeCollision(std::shared_ptr<T> cube, glm::vec3 ray, glm::vec3 dir,
                      std::optional<glm::vec3> vertex_intersection = std::nullopt);
 
+    /// @note This method returns a copy of the cube, not a const reference.
     [[nodiscard]] std::shared_ptr<T> cube() const noexcept {
         return m_cube;
     }

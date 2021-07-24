@@ -12,8 +12,8 @@
 namespace inexor::vulkan_renderer::world {
 
 template <typename T>
-RayCubeCollision<T>::RayCubeCollision(const std::shared_ptr<T> cube, const glm::vec3 ray_pos, // NOLINT
-                                      const glm::vec3 ray_dir, const std::optional<glm::vec3> vertex_intersection)
+RayCubeCollision<T>::RayCubeCollision(const std::shared_ptr<T> cube, const glm::vec3 ray_pos, const glm::vec3 ray_dir,
+                                      const std::optional<glm::vec3> vertex_intersection)
     : m_cube(cube), m_vertex_intersection(vertex_intersection) {
 
     /// In order to work with cubes of arbitrary size, this lambda calculates the center of a cube's face with respect

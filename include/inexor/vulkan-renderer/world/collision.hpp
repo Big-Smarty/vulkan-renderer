@@ -30,10 +30,12 @@ class RayCubeCollision {
 public:
     /// @brief Default constructor
     /// @param The cube to check collisions with
+    /// @note We need to pass cube as a std::shared_ptr by copy in this case because we want to ensure the lifetime
+    /// of the object in multithreaded code. We are not accepting const references here, as they could become invalid.
     /// @param ray The start point of the ray
     /// @param dir The direction of the ray
     /// @param The intersection between ray and vertex geometry of the cube which was found
-    RayCubeCollision(std::shared_ptr<T> cube, glm::vec3 ray, glm::vec3 dir,
+    RayCubeCollision(std::shared_ptr<T> cube, glm::vec3 ray, glm::vec3 dir, // NOLINT
                      std::optional<glm::vec3> vertex_intersection = std::nullopt);
 
     /// @note This method returns a copy of the cube, not a const reference.

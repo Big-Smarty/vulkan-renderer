@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <optional>
+#include <shared_mutex>
 #include <vector>
 
 // Forward declaration
@@ -16,6 +17,7 @@ namespace inexor::vulkan_renderer::world {
 class OctreeCollisionSolver {
 private:
     std::vector<std::pair<std::shared_ptr<world::Cube>, float>> m_collision_candidates{};
+    std::shared_mutex m_collision_solver_mutex;
 
 public:
     /// @brief Default constructor.
@@ -28,10 +30,19 @@ public:
     /// @param direction The direction vector of the ray
     /// @return The collision data
     [[nodiscard]] std::optional<RayCubeCollision<Cube>>
-    find_ray_octree_collision(std::vector<std::shared_ptr<world::Cube>> &worlds, glm::vec3 position,
+    find_ray_octree_collision(const std::vector<std::shared_ptr<world::Cube>> &worlds, glm::vec3 position,
                               glm::vec3 direction);
 
-    // TODO: Implement collision with all octrees.
+    /// @brief Find all collisions between the given ray and the given octrees, sorted by increasing distance between
+    /// the octree and the camera.
+    /// @note Expect this method to be more costly than find_ray_octree_collision!
+    /// @param worlds The octrees to check for collision
+    /// @param position The start position of the ray
+    /// @param direction The direction vector of the ray
+    /// @return A vector of the found collisions. If no collisions were found, the vector is empty.
+    [[nodiscard]] std::vector<RayCubeCollision<Cube>>
+    find_all_ray_octree_collisions(const std::vector<std::shared_ptr<world::Cube>> &worlds, glm::vec3 position,
+                                   glm::vec3 direction);
 };
 
 } // namespace inexor::vulkan_renderer::world

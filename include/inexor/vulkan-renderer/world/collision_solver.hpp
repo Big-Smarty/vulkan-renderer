@@ -18,7 +18,6 @@ private:
     std::vector<std::pair<std::shared_ptr<world::Cube>, float>> m_collision_candidates{};
 
 public:
-
     /// @brief Default constructor.
     /// @param octree_count The number of octrees
     explicit OctreeCollisionSolver(std::size_t octree_count);

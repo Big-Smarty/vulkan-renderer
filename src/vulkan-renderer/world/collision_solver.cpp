@@ -22,18 +22,17 @@ OctreeCollisionSolver::find_all_ray_octree_collisions(const std::vector<std::sha
     found_collisions.reserve(worlds.size());
 
     // We need a critical section because we are modifying m_collision_candidates.
-    std::scoped_lock lock(m_collision_solver_mutex);
     {
+        std::scoped_lock lock(m_collision_solver_mutex);
+
         // TODO: Optimize this! Avoid memory re-allocation if possible and benchmark it.
         m_collision_candidates.clear();
         m_collision_candidates.reserve(worlds.size());
 
         for (const auto &world : worlds) {
-            if (!is_bounding_box_and_bounding_sphere_hit(world, position, direction)) {
-                continue;
+            if (is_bounding_box_and_bounding_sphere_hit(world, position, direction)) {
+                m_collision_candidates.emplace_back(std::make_pair(world, glm::distance2(position, direction)));
             }
-
-            m_collision_candidates.emplace_back(std::make_pair(world, glm::distance2(position, direction)));
         }
 
         // Sort the octree collision candidates by increasing square of distance between cube center and camera.

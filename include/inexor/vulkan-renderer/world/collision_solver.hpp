@@ -19,10 +19,23 @@ private:
     std::vector<std::pair<std::shared_ptr<world::Cube>, float>> m_collision_candidates{};
     std::shared_mutex m_collision_solver_mutex;
 
+    /// @brief Find all collisions between the given ray and the given octrees, sorted by increasing distance between
+    /// the octree and the camera.
+    /// @param worlds The octrees to check for collision
+    /// @param position The start position of the ray
+    /// @param direction The direction vector of the ray
+    /// @return A vector of the found collisions. If no collisions were found, the vector is empty.
+    [[nodiscard]] std::vector<RayCubeCollision<Cube>>
+    find_all_ray_octree_collisions(const std::vector<std::shared_ptr<world::Cube>> &worlds, glm::vec3 position,
+                                   glm::vec3 direction, bool find_only_one_collision = true);
+
 public:
     /// @brief Default constructor.
     /// @param octree_count The number of octrees
     explicit OctreeCollisionSolver(std::size_t octree_count);
+
+    // TODO: Implement min/max collision distance if required.
+    // TODO: Start sorting only after a certain number of worlds.
 
     /// @brief Find a collision between a ray and an octree which is closest to the camera.
     /// @param worlds The octrees to check for collision

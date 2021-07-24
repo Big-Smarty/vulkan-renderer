@@ -576,8 +576,7 @@ void Application::check_octree_collisions() {
     // TODO: Apply one big global octree for bounding volume hierarchy.
     // TODO: Implement a world manager which resolves multiple octree collision.
 
-    const auto collision =
-        m_collision_solver->find_ray_octree_collision(m_worlds, m_camera->position(), m_camera->front());
+    const auto collision = m_collision_solver->find_ray_octree_collision(m_camera->position(), m_camera->front());
 
     if (collision) {
         const auto cube_hit = collision.value().cube_intersection();

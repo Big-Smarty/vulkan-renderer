@@ -319,7 +319,6 @@ void Application::setup_vulkan_debug_callback() {
 
                         // Wait for spdlog to shut down before aborting.
                         spdlog::shutdown();
-                        std::abort();
                     }
                     return VK_FALSE;
                 });

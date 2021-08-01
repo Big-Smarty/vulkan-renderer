@@ -6,8 +6,6 @@
 namespace inexor::vulkan_renderer::wrapper {
 
 GLFWContext::GLFWContext() {
-    spdlog::debug("Creating GLFW context.");
-
     m_initialized = static_cast<bool>(glfwInit());
     if (!m_initialized) {
         throw std::runtime_error("Error: glfwInit failed!");

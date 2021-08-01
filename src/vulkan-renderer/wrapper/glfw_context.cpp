@@ -12,8 +12,6 @@ GLFWContext::GLFWContext() {
     if (!m_initialized) {
         throw std::runtime_error("Error: glfwInit failed!");
     }
-
-    spdlog::debug("Created GLFW context successfully.");
 }
 
 GLFWContext::GLFWContext(GLFWContext &&other) noexcept {

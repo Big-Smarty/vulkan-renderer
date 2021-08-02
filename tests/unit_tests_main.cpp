@@ -9,8 +9,7 @@ int main(int argc, char **argv) {
 
     // Print engine and application metadata.
     std::cout << ENGINE_NAME << ", version " << ENGINE_VERSION_STR << std::endl;
-    std::cout << APP_NAME << ", version " << APP_VERSION_STR << std::endl;
-    std::cout << "Configuration: " << BUILD_TYPE << ", Git SHA " << BUILD_GIT << std::endl;
+    std::cout << "Configuration: " << ENGINE_BUILD_TYPE << ", Git SHA " << ENGINE_GIT << std::endl;
 
     testing::InitGoogleTest(&argc, argv);
     RUN_ALL_TESTS();

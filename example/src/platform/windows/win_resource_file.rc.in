@@ -1,0 +1,32 @@
+#include <winver.h>
+
+#define IDI_ICON 1
+
+LANGUAGE 0x09, 0x01
+IDI_ICON ICON "${INEXOR_APP_ICON_ICO}"
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    ${INEXOR_APP_VERSION_MAJOR},${INEXOR_APP_VERSION_MINOR},${INEXOR_APP_VERSION_PATCH},0
+PRODUCTVERSION ${INEXOR_APP_VERSION_MAJOR},${INEXOR_APP_VERSION_MINOR},${INEXOR_APP_VERSION_PATCH},0
+#ifdef _DEBUG
+FILEFLAGS 0x1L
+#else
+FILEFLAGS 0x0L
+#endif
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "040904b0"
+        {
+            VALUE "CompanyName",      "${INEXOR_APP_DEV_TEAM_NAME}\0"
+            VALUE "FileDescription",  "${INEXOR_APP_NAME} - ${INEXOR_APP_GIT_SHA}\0"
+            VALUE "FileVersion",      "${INEXOR_APP_VERSION_MAJOR}.${INEXOR_APP_VERSION_MINOR}.${INEXOR_APP_VERSION_PATCH}\0"
+            VALUE "LegalCopyright",   "${INEXOR_APP_LICENSE}\0"
+            VALUE "ProductName",      "${INEXOR_APP_NAME}\0"
+            VALUE "ProductVersion",   "${INEXOR_APP_VERSION_MAJOR}.${INEXOR_APP_VERSION_MINOR}.${INEXOR_APP_VERSION_PATCH}\0"
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x409, 1200
+    }
+}

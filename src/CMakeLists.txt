@@ -98,7 +98,7 @@ endif()
 
 # Replace variables in header file with CMake values
 configure_file(
-    ${PROJECT_SOURCE_DIR}/include/inexor/vulkan-renderer/meta.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/include/inexor/vulkan-renderer/meta.hpp
+    ${PROJECT_SOURCE_DIR}/include/inexor/vulkan-renderer/meta.hpp.in ${PROJECT_BINARY_DIR}/include/inexor/vulkan-renderer/meta.hpp
 )
 
 target_include_directories(
@@ -108,7 +108,7 @@ target_include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/third_party
     # Include configured header file which contains engine metadata
-    ${CMAKE_CURRENT_BINARY_DIR}/include/
+    ${PROJECT_BINARY_DIR}/include/
 )
 
 if(CONAN_LIBS)

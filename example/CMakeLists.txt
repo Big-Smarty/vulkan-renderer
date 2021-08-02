@@ -1,13 +1,16 @@
-if(MSVC)
+cmake_minimum_required(VERSION 3.9)
+
+project(inexor-engine-example)
+
+# Stop in source builds
+set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+
+configure_file(src/platform/windows/win_resource_file.rc.in ${PROJECT_BINARY_DIR}/src/platform/windows/win_resource_file.rc)
+
 add_executable(inexor-vulkan-renderer-example
-    main.cpp
-    ${CMAKE_BINARY_DIR}/include/inexor/vulkan-renderer/win_resource_file.rc
+    src/main.cpp
+    ${PROJECT_BINARY_DIR}/src/platform/windows/win_resource_file.rc
 )
-else()
-add_executable(inexor-vulkan-renderer-example
-    main.cpp
-)
-endif()
 
 set_target_properties(
     inexor-vulkan-renderer-example PROPERTIES

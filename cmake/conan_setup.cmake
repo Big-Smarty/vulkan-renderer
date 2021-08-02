@@ -13,13 +13,13 @@ if(UNIX)
     set(compiler_libcxx SETTINGS compiler.libcxx=libstdc++11)
 endif()
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_BINARY_DIR})
+list(APPEND CMAKE_PREFIX_PATH ${PROJECT_BINARY_DIR})
 
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+if(NOT EXISTS "${PROJECT_BINARY_DIR}/conan.cmake")
     message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
     file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/0140fdbe363abfc1993f579e8d711067ac4742e1/conan.cmake"
-        "${CMAKE_BINARY_DIR}/conan.cmake"
+        "${PROJECT_BINARY_DIR}/conan.cmake"
         EXPECTED_HASH SHA256=DDF0FAFACF48B5C4912ECCE5701C252532437C40277734CAD5F4A8084470ADBC
         TLS_VERIFY ON)
 endif()

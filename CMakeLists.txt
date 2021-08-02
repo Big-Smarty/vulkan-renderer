@@ -38,18 +38,23 @@ find_package(Vulkan REQUIRED)
 include(conan_setup)
 
 # The marked constants in application.hpp will be replaced with the following values
-set(INEXOR_ENGINE_NAME "Inexor Engine")
+set(INEXOR_NAME "Inexor Engine")
 set(INEXOR_DEV_TEAM_NAME "Inexor Collective")
-set(INEXOR_APP_NAME "Inexor Vulkan-renderer example")
 set(INEXOR_LICENSE "MIT License")
 
-set(INEXOR_ENGINE_VERSION_MAJOR 0)
-set(INEXOR_ENGINE_VERSION_MINOR 1)
-set(INEXOR_ENGINE_VERSION_PATCH 0)
+set(INEXOR_VERSION_MAJOR 0)
+set(INEXOR_VERSION_MINOR 1)
+set(INEXOR_VERSION_PATCH 0)
 
-set(INEXOR_APP_VERSION_MAJOR 0)
-set(INEXOR_APP_VERSION_MINOR 1)
-set(INEXOR_APP_VERSION_PATCH 0)
+# TODO: place it outside of the engine code
+set(INEXOR_APP_DEV_TEAM_NAME "Inexor Collective" CACHE STRING "App developer name")
+set(INEXOR_APP_NAME "Inexor Engine App Example" CACHE STRING "App name")
+set(INEXOR_APP_DESCRIPTION "Inexor Engine App Example" CACHE STRING "App short description")
+set(INEXOR_APP_LICENSE "MIT License" CACHE STRING "App license")
+set(INEXOR_APP_VERSION_MAJOR 0 CACHE STRING "App version major")
+set(INEXOR_APP_VERSION_MINOR 1 CACHE STRING "App version minor")
+set(INEXOR_APP_VERSION_PATCH 0 CACHE STRING "App version patch")
+set(INEXOR_APP_ICON_ICO "${PROJECT_SOURCE_DIR}\\example\\assets\\textures\\inexor_icon_256px.ico" CACHE PATH "App icon as .ico")
 
 find_package(Git REQUIRED)
 
@@ -60,14 +65,11 @@ execute_process(
     OUTPUT_VARIABLE INEXOR_GIT_SHA
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+set(INEXOR_APP_GIT_SHA ${INEXOR_GIT_SHA} CACHE STRING "App git sha")
 
 add_subdirectory(shaders)
 
 add_subdirectory(src)
-
-if(MSVC)
-    add_subdirectory(platform/windows)
-endif()
 
 if(INEXOR_BUILD_BENCHMARKS)
     add_subdirectory(benchmarks)

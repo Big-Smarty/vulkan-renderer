@@ -354,7 +354,6 @@ Application::Application(int argc, char **argv) {
     tools::CommandLineArgumentParser cla_parser;
     cla_parser.parse_args(argc, argv);
 
-    spdlog::debug("application version: {}.{}.{}", APP_VERSION[0], APP_VERSION[1], APP_VERSION[2]);
     spdlog::debug("engine version: {}.{}.{}", ENGINE_VERSION[0], ENGINE_VERSION[1], ENGINE_VERSION[2]);
 
     // Load the configuration from the TOML file.
@@ -536,7 +535,7 @@ void Application::update_imgui_overlay() {
                  ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::Text("%s", m_device->gpu_name().c_str());
     ImGui::Text("Engine version %d.%d.%d (Git sha %s)", ENGINE_VERSION[0], ENGINE_VERSION[1], ENGINE_VERSION[2],
-                BUILD_GIT);
+                ENGINE_GIT);
     const auto cam_pos = m_camera->position();
     ImGui::Text("Camera position (%.2f, %.2f, %.2f)", cam_pos.x, cam_pos.y, cam_pos.z);
     const auto cam_rot = m_camera->rotation();

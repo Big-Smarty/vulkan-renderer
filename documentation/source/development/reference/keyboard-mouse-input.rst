@@ -9,16 +9,16 @@ Inexor engine uses `glfw3 <https://www.glfw.org/>`__ for window management and f
 
 .. note::
 
-    It's not possible handle glfw input data in a thread which is separate from the thread which created the corresponding window. For more information, check out this `glfw forum post <https://discourse.glfw.org/t/multithreading-glfw/573>`__.
+    It's not possible to handle glfw input data in a thread which is separate from the thread which created the corresponding window. For more information, check out this `glfw forum post <https://discourse.glfw.org/t/multithreading-glfw/573>`__.
 
 Keyboard input
 --------------
 
 * We store the pressed keys as a ``std::array<bool, GLFW_KEY_LAST>`` member in ``KeyboardMouseInputData``
 * The maximum number of keys is defined by ``GLFW_KEY_LAST``
-* If a key is pressed or released, we notify ``KeyboardMouseInputData`` by calling method ``press_key`` and ``release_key``, respectively
-* Check if a key is currently pressed by calling method ``is_key_pressed``
-* Check if a key was pressed once by calling method ``was_key_pressed_once``
+* If a key is pressed or released, we notify ``KeyboardMouseInputData`` by calling the methods ``press_key`` and ``release_key``, respectively
+* Check if a key is currently pressed by calling the method ``is_key_pressed``
+* Check if a key was pressed once by calling the method ``was_key_pressed_once``
 
 Mouse input
 -----------

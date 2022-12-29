@@ -550,10 +550,6 @@ void Application::process_input() {
                          deadzone_lambda(m_input->gamepad_data().current_joystick_axes(1).y) * -5.f);
     }
 
-    m_camera->set_movement_state(CameraMovement::FORWARD, m_input->kbm_data().is_key_pressed(GLFW_KEY_W));
-    m_camera->set_movement_state(CameraMovement::LEFT, m_input->kbm_data().is_key_pressed(GLFW_KEY_A));
-    m_camera->set_movement_state(CameraMovement::BACKWARD, m_input->kbm_data().is_key_pressed(GLFW_KEY_S));
-    m_camera->set_movement_state(CameraMovement::RIGHT, m_input->kbm_data().is_key_pressed(GLFW_KEY_D));
     m_camera->set_movement_state(CameraMovement::FORWARD,
                                  m_input->gamepad_data().current_joystick_axes(0)[GLFW_GAMEPAD_AXIS_LEFT_Y] <= -0.15);
     m_camera->set_movement_state(CameraMovement::LEFT,
@@ -562,6 +558,11 @@ void Application::process_input() {
                                  m_input->gamepad_data().current_joystick_axes(0)[GLFW_GAMEPAD_AXIS_LEFT_Y] >= 0.15);
     m_camera->set_movement_state(CameraMovement::RIGHT,
                                  m_input->gamepad_data().current_joystick_axes(0)[GLFW_GAMEPAD_AXIS_LEFT_X] >= 0.15);
+    m_camera->update(m_time_passed);
+    m_camera->set_movement_state(CameraMovement::FORWARD, m_input->kbm_data().is_key_pressed(GLFW_KEY_W));
+    m_camera->set_movement_state(CameraMovement::LEFT, m_input->kbm_data().is_key_pressed(GLFW_KEY_A));
+    m_camera->set_movement_state(CameraMovement::BACKWARD, m_input->kbm_data().is_key_pressed(GLFW_KEY_S));
+    m_camera->set_movement_state(CameraMovement::RIGHT, m_input->kbm_data().is_key_pressed(GLFW_KEY_D));
 }
 
 void Application::check_octree_collisions() {
